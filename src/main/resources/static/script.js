@@ -105,7 +105,7 @@ function connectToStranger() {
 
   if ("WebSocket" in window) {
     // Let us open a web socket
-    var ws = new WebSocket("ws://localhost:8081/connect");
+    var ws = new WebSocket("ws://freerandomchat.herokuapp.com/connect");
     socket = ws;
 
     ws.onopen = function () {

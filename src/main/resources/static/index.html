@@ -1,0 +1,41 @@
+<html>
+<head>
+<style type="text/css">
+
+#content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  border: 2px solid grey;
+  border-radius:5px;
+  text-align:center;
+  background-color:#92a8d1;
+}
+
+#center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align:center;
+  color:white;
+  font-size: 20px;
+  width:max-content;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+</style>
+</head>
+<body>
+<div id="content"><a  href="main.html" id="center">Start A Chat</a></div>
+<script>
+var a = document.getElementById('center');
+var div = document.getElementById('content');
+div.style.width = a.clientWidth + 100 +"px";
+div.style.height = a.clientHeight + 50 +"px";
+</script>
+</body>
+</html>

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.*;
 
 import org.json.JSONObject;
 import org.springframework.web.socket.CloseStatus;
@@ -15,17 +16,21 @@ import org.springframework.web.socket.WebSocketSession;
 
 public class ClientManager implements WebSocketHandler {
 	
+	private static final Logger logger = Logger.getLogger(ClientManager.class.getName());
+	
 	static List<WebSocketSession> waitingUsers = new ArrayList<WebSocketSession>();
 	
 	static Map<WebSocketSession,WebSocketSession> connectedUsers = new HashMap<WebSocketSession, WebSocketSession>(); 
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		logger.log(Level.INFO, "In afterConnectionEstablished { session: "+session +" }");
 		JSONObject msg = new JSONObject();
 		if(waitingUsers.isEmpty()) {
 			waitingUsers.add(session);
 			msg.put("flag","start");
 			msg.put("msg","Searching for partner...");
+			logger.log(Level.INFO, "In afterConnectionEstablished { waitingUsers At empty: "+waitingUsers +" }");
 			session.sendMessage(new TextMessage(msg.toString()));
 		}else {
 		WebSocketSession user = waitingUsers.get(new Random().nextInt(waitingUsers.size()));
@@ -34,6 +39,7 @@ public class ClientManager implements WebSocketHandler {
 		waitingUsers.remove(user);
 		msg.put("flag","start");
 		msg.put("msg","You are connected to stranger.");
+		logger.log(Level.INFO, "In afterConnectionEstablished { waitingUsers At connected: "+waitingUsers+", connected Users:"  +connectedUsers+" }");
 		user.sendMessage(new TextMessage(msg.toString()));
 		session.sendMessage(new TextMessage(msg.toString()));
 		}
@@ -41,11 +47,14 @@ public class ClientManager implements WebSocketHandler {
 
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+		
+		logger.log(Level.INFO, "In handleMessage{ session: "+session+", messsage: "+message+" }");
 		JSONObject msg = new JSONObject();
 		String payload = (String) message.getPayload();
 		JSONObject receivedMsg = new JSONObject(payload);
 		Object value = receivedMsg.get("type");
 		WebSocketSession friend = connectedUsers.get(session);
+		logger.log(Level.INFO, "In handleMessage{ friend: "+friend+" }");
 		if(null != friend) {
 		if(value.equals("typing")) {
 			msg.put("flag","typing");
@@ -72,7 +81,8 @@ public class ClientManager implements WebSocketHandler {
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
 		waitingUsers.remove(session);
 		connectedUsers.remove(session);
-		System.out.println("OnClosed "+waitingUsers);
+		logger.log(Level.INFO, "OnClosed: "+waitingUsers);
+		logger.log(Level.INFO, "OnClosed: "+connectedUsers);
 	}
 
 	@Override

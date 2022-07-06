@@ -44,30 +44,37 @@ textBox.style.width = footerWidth;
 
 function appendMessage(value, fontStyle, textPos) {
   const message = document.createElement('p');
-  const arrow = document.createElement('i');
+  const arrow = document.createElement('div');
   message.style.fontWeight = fontStyle;
   message.style.textAlign = textPos;
   const newMessage = document.createTextNode(value+" ");
   if(textPos === 'left'){
-    arrow.classList.add('arrow')
-    arrow.classList.add('right')
+    arrow.classList.add('arrowRight')
+    //arrow.classList.add('right')
     message.appendChild(arrow);
+    if (width < 680) {
+        message.append('\u00A0');
+    }
     message.appendChild(newMessage)}
-  if(textPos === 'right'){
+  else if(textPos === 'right'){
     message.appendChild(newMessage)
-    arrow.classList.add('arrow')
-    arrow.classList.add('left')
+    arrow.classList.add('arrowLeft')
+    //arrow.classList.add('left')
     message.appendChild(arrow);
     if (width > 680) {
     message.append('\u00A0');
     }else{message.append('\u00A0\u00A0\u00A0');}
-    }
+    }else{message.appendChild(newMessage)}
   messages.appendChild(message);
 }
 
 function appendConstMessage(value, fontStyle, textPos) {
   constMsg.style.fontWeight = fontStyle;
   constMsg.style.textAlign = textPos;
+  if(value.trim()==="You are connected to stranger."){
+    sendB.disabled = false;
+    textbox.disabled = false;
+  }
   constMsg.innerHTML = value;
 }
 
@@ -211,7 +218,8 @@ function connectedState() {
   stopB.style.visibility = 'visible';
   newB.style.visibility = 'hidden';
   stopB.disabled = false;
-  textbox.disabled = false;
+  sendB.disabled = true;
+  textbox.disabled = true;
 }
 
 function clearBox()
@@ -222,3 +230,15 @@ function clearBox()
 	messages.appendChild(typing);
 	
 }
+
+window.onbeforeunload = function () {
+  if (socket.readyState === WebSocket.OPEN) {
+    var data = JSON.stringify({
+      'type': "disconnect",
+      'value': true
+    })
+    socket.send(data);
+  }
+  socket.close();
+  closedBy = true;
+ }

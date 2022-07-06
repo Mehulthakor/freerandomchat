@@ -48,13 +48,13 @@ public class ClientManager implements WebSocketHandler {
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
 		
-		logger.log(Level.INFO, "In handleMessage{ session: "+session+", messsage: "+message+" }");
+		//logger.log(Level.INFO, "In handleMessage{ session: "+session+", messsage: "+message+" }");
 		JSONObject msg = new JSONObject();
 		String payload = (String) message.getPayload();
 		JSONObject receivedMsg = new JSONObject(payload);
 		Object value = receivedMsg.get("type");
 		WebSocketSession friend = connectedUsers.get(session);
-		logger.log(Level.INFO, "In handleMessage{ friend: "+friend+" }");
+		//logger.log(Level.INFO, "In handleMessage{ friend: "+friend+" }");
 		if(null != friend) {
 		if(value.equals("typing")) {
 			msg.put("flag","typing");
@@ -81,7 +81,7 @@ public class ClientManager implements WebSocketHandler {
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
 		waitingUsers.remove(session);
 		connectedUsers.remove(session);
-		logger.log(Level.INFO, "OnClosed: "+waitingUsers);
+		logger.log(Level.INFO, "OnClosed: "+waitingUsers+" session: "+session);
 		logger.log(Level.INFO, "OnClosed: "+connectedUsers);
 	}
 

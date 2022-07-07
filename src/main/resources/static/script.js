@@ -164,7 +164,7 @@ function connectToStranger() {
         appendMessage("You have disconnected", "Bold", "center");
         startState();
       }
-      else if(constMsg.value==="Searching for partner..." && !closedBy){
+      else if(constMsg.innerHTML==="Searching for partner...&nbsp;&nbsp;&nbsp;" && !closedBy){
         alert("Currently No user available Please try again later");
         appendMessage("disconnected", "Bold", "center");
         startState();

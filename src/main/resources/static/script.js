@@ -268,7 +268,7 @@ window.onbeforeunload = function () {
 }
 
 function getTotalUsers() {
-  fetch('https://localhost:8081/getTotalUsers')
+  fetch('https://freerandomchat.herokuapp.com/getTotalUsers')
     .then(response => {
       return response.json();
     }).then(data => {

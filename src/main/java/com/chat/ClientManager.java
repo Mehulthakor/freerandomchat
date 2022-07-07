@@ -63,6 +63,14 @@ public class ClientManager implements WebSocketHandler {
 			msg.put("msg",receivedMsg.get("value"));
 			friend.sendMessage(new TextMessage(msg.toString()));}
 		else if(value.equals("disconnect")){
+			if(waitingUsers.contains(session)) {
+				waitingUsers.remove(session);
+				waitingUsers.remove(friend);
+			}
+			if(connectedUsers.containsKey(session)) {
+				connectedUsers.remove(session);
+				connectedUsers.remove(friend);
+			}
 			msg.put("flag","disconnect");
 			msg.put("msg",receivedMsg.get("value"));
 			msg.put("totalUser",waitingUsers.size() + connectedUsers.size());
@@ -83,8 +91,12 @@ public class ClientManager implements WebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-		waitingUsers.remove(session);
-		connectedUsers.remove(session);
+		if(waitingUsers.contains(session)) {
+			waitingUsers.remove(session);			
+		}
+		if(connectedUsers.containsKey(session)) {
+			connectedUsers.remove(session);			
+		}
 		logger.log(Level.INFO, "OnClosed: "+waitingUsers+" session: "+session);
 		logger.log(Level.INFO, "OnClosed: "+connectedUsers);
 	}

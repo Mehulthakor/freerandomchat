@@ -15,6 +15,7 @@ startState();
 var closedBy;
 var socket;
 
+getTotalUsers();
 var html = document.documentElement;
 var height = Math.max(  //  <---------------------------- entire document height
   html.clientHeight, html.scrollHeight, html.offsetHeight
@@ -191,8 +192,9 @@ stopB.onclick = function () {
     })
     socket.send(data);
   }
-  socket.close();
   closedBy = true;
+  socket.close();
+  getTotalUsers();
 }
 
 newB.onclick = function () {
@@ -263,4 +265,13 @@ window.onbeforeunload = function () {
   }
   socket.close();
   closedBy = true;
+}
+
+function getTotalUsers() {
+  fetch('https://freerandomchat.herokuapp.com/getTotalUsers')
+    .then(response => {
+      return response.json();
+    }).then(data => {
+      userCount.innerHTML = "Total Users: " + data;
+    })
 }

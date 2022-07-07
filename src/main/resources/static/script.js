@@ -9,6 +9,7 @@ const startB = document.getElementById("b3");
 const newB = document.getElementById("b4");
 const constMsg = document.getElementById("constMsg");
 const typing = document.getElementById("typing");
+const userCount = document.getElementById("userCount");
 messages.style.marginTop = headerHeight + "px";
 startState();
 var closedBy;
@@ -27,9 +28,19 @@ if (width > 680) {
   messages.style.border = "2px solid grey";
   messages.style.borderRadius = "5px";
   textbox.style.width = 69 + "%"
+  stopB.style.width = "15%";
+  newB.style.width = "15%";
+  sendB.style.width = "15%";
+  startB.style.width = "15%";
+  textbox.style.left = "15.3%";
 } else {
   messages.style.width = 100 + "%";
-  textbox.style.width =  68 + "%";
+  textbox.style.width =  60 + "%";
+  stopB.style.width = "18%";
+  newB.style.width = "18%";
+  sendB.style.width = "18%";
+  startB.style.width = "18%";
+  textbox.style.left = "19.3%";
 }
 height = height - headerHeight - footerHeight;
 messages.style.height = (height - 10) + "px";
@@ -40,7 +51,7 @@ stopB.style.height = footerHeight + "px";
 newB.style.height = footerHeight + "px";
 sendB.style.height = footerHeight + "px";
 startB.style.height = footerHeight + "px";
-textBox.style.width = footerWidth;
+//textBox.style.width = footerWidth;
 
 function appendMessage(value, fontStyle, textPos) {
   const message = document.createElement('p');
@@ -124,6 +135,7 @@ function connectToStranger() {
       const obj = JSON.parse(evt.data);
       if (obj.flag === 'start') {
         appendConstMessage(obj.msg + '\u00A0\u00A0\u00A0', "Bold", "left");
+        userCount.innerHTML = "Total Users: "+obj.totalUser;
       }
       else if (obj.flag === 'typing') {
         if (obj.msg) {
@@ -133,12 +145,14 @@ function connectToStranger() {
         }
       }
       else if (obj.flag === 'disconnect') {
+        userCount.innerHTML = "Total Users: "+obj.totalUser;
         socket.close();
         closedBy = false;
         startState();
       }
       else {
         appendMessage(obj.msg, "normal", "right");
+        userCount.innerHTML = "Total Users: "+obj.totalUser;
       }
     };
 
@@ -150,13 +164,18 @@ function connectToStranger() {
         appendMessage("You have disconnected", "Bold", "center");
         startState();
       }
+      else if(constMsg.value==="Searching for partner..." && !closedBy){
+        alert("Currently No user available Please try again later");
+        appendMessage("disconnected", "Bold", "center");
+        startState();
+      }
       else { appendMessage("Stranger has disconnected", "Bold", "center");}
       closedBy = false;
     };
   } else {
 
     // The browser doesn't support WebSocket
-    alert("WebSocket NOT supported by your Browser!");
+    alert("This site is not supported by your Browser! Please try using another browser or update your browser");
   }
 }
 
@@ -210,6 +229,7 @@ function startState() {
   typing.style.visibility = 'hidden';
   startB.style.visibility = 'visible';
   textbox.disabled = true;
+  textbox.value="";
 }
 
 function connectedState() {

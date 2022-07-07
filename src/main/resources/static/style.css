@@ -27,7 +27,6 @@
     position: absolute;
     left: 0;
     font-size:18px;
-    width: 15%;
     background-color: red;
     border-radius: 5px;
     color: white;
@@ -38,7 +37,6 @@
     position: absolute;
     left: 0;
     font-size:18px;
-    width: 15%;
     background-color: #92a8d1;
     color: white;
 }
@@ -48,7 +46,6 @@
     font-size:18px;
     position: absolute;
     right: 0;
-    width: 15%;
     background-color: green;
     color: white;
 }
@@ -58,14 +55,12 @@
     font-size:18px;
     position: absolute;
     right: 0;
-    width: 15%;
     background-color: green;
     color: white;
 }
 #textBox{
     position: absolute;
     height: 100%;
-    left: 15.3%;
 }
 
 .arrowRight {
@@ -84,4 +79,9 @@
   padding: 3px;
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
+}
+
+#userCount{
+	position: absolute;
+    bottom: 0;'
 }

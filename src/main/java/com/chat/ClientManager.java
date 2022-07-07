@@ -30,6 +30,7 @@ public class ClientManager implements WebSocketHandler {
 			waitingUsers.add(session);
 			msg.put("flag","start");
 			msg.put("msg","Searching for partner...");
+			msg.put("totalUser",waitingUsers.size() + connectedUsers.size());
 			logger.log(Level.INFO, "In afterConnectionEstablished { waitingUsers At empty: "+waitingUsers +" }");
 			session.sendMessage(new TextMessage(msg.toString()));
 		}else {
@@ -39,6 +40,7 @@ public class ClientManager implements WebSocketHandler {
 		waitingUsers.remove(user);
 		msg.put("flag","start");
 		msg.put("msg","You are connected to stranger.");
+		msg.put("totalUser",waitingUsers.size() + connectedUsers.size());
 		logger.log(Level.INFO, "In afterConnectionEstablished { waitingUsers At connected: "+waitingUsers+", connected Users:"  +connectedUsers+" }");
 		user.sendMessage(new TextMessage(msg.toString()));
 		session.sendMessage(new TextMessage(msg.toString()));
@@ -63,11 +65,13 @@ public class ClientManager implements WebSocketHandler {
 		else if(value.equals("disconnect")){
 			msg.put("flag","disconnect");
 			msg.put("msg",receivedMsg.get("value"));
+			msg.put("totalUser",waitingUsers.size() + connectedUsers.size());
 			friend.sendMessage(new TextMessage(msg.toString()));
 		}
 		else {
 		msg.put("flag","msg");
 		msg.put("msg",receivedMsg.get("value"));
+		msg.put("totalUser",waitingUsers.size() + connectedUsers.size());
 		friend.sendMessage(new TextMessage(msg.toString()));}	
 	}}
 

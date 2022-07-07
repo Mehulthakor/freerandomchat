@@ -35,7 +35,7 @@ if (width > 680) {
   textbox.style.left = "15.3%";
 } else {
   messages.style.width = 100 + "%";
-  textbox.style.width =  60 + "%";
+  textbox.style.width = 60 + "%";
   stopB.style.width = "18%";
   newB.style.width = "18%";
   sendB.style.width = "18%";
@@ -58,31 +58,32 @@ function appendMessage(value, fontStyle, textPos) {
   const arrow = document.createElement('div');
   message.style.fontWeight = fontStyle;
   message.style.textAlign = textPos;
-  const newMessage = document.createTextNode(value+" ");
-  if(textPos === 'left'){
+  const newMessage = document.createTextNode(value + " ");
+  if (textPos === 'left') {
     arrow.classList.add('arrowRight')
     //arrow.classList.add('right')
     message.appendChild(arrow);
     if (width < 680) {
-        message.append('\u00A0');
+      message.append('\u00A0');
     }
-    message.appendChild(newMessage)}
-  else if(textPos === 'right'){
+    message.appendChild(newMessage)
+  }
+  else if (textPos === 'right') {
     message.appendChild(newMessage)
     arrow.classList.add('arrowLeft')
     //arrow.classList.add('left')
     message.appendChild(arrow);
     if (width > 680) {
-    message.append('\u00A0');
-    }else{message.append('\u00A0\u00A0\u00A0');}
-    }else{message.appendChild(newMessage)}
+      message.append('\u00A0');
+    } else { message.append('\u00A0\u00A0\u00A0'); }
+  } else { message.appendChild(newMessage) }
   messages.appendChild(message);
 }
 
 function appendConstMessage(value, fontStyle, textPos) {
   constMsg.style.fontWeight = fontStyle;
   constMsg.style.textAlign = textPos;
-  if(value.trim()==="You are connected to stranger."){
+  if (value.trim() === "You are connected to stranger.") {
     sendB.disabled = false;
     textbox.disabled = false;
   }
@@ -90,20 +91,22 @@ function appendConstMessage(value, fontStyle, textPos) {
 }
 
 function getMessages() {
-  let textt;
-  if (width > 680) {
-    textt = '\u00A0\u00A0' + textbox.value
-  } else {
-    textt = textbox.value
+  if (textBox.value.trim() != "") {
+    let textt;
+    if (width > 680) {
+      textt = '\u00A0\u00A0' + textbox.value
+    } else {
+      textt = textbox.value
+    }
+    appendMessage(textt, "normal", "left");
+    var data = JSON.stringify({
+      'type': "msg",
+      'value': textbox.value
+    })
+    socket.send(data);
+    textBox.value = "";
+    scrollToBottom();
   }
-  appendMessage(textt, "normal", "left");
-  var data = JSON.stringify({
-    'type': "msg",
-    'value': textbox.value
-  })
-  socket.send(data);
-  textBox.value = "";
-  scrollToBottom();
 }
 
 function scrollToBottom() {
@@ -134,8 +137,8 @@ function connectToStranger() {
     ws.onmessage = function (evt) {
       const obj = JSON.parse(evt.data);
       if (obj.flag === 'start') {
-        appendConstMessage(obj.msg + '\u00A0\u00A0\u00A0', "Bold", "left");
-        userCount.innerHTML = "Total Users: "+obj.totalUser;
+        appendConstMessage(obj.msg, "Bold", "left");
+        userCount.innerHTML = "Total Users: " + obj.totalUser;
       }
       else if (obj.flag === 'typing') {
         if (obj.msg) {
@@ -145,14 +148,14 @@ function connectToStranger() {
         }
       }
       else if (obj.flag === 'disconnect') {
-        userCount.innerHTML = "Total Users: "+obj.totalUser;
+        userCount.innerHTML = "Total Users: " + obj.totalUser;
         socket.close();
         closedBy = false;
         startState();
       }
       else {
         appendMessage(obj.msg, "normal", "right");
-        userCount.innerHTML = "Total Users: "+obj.totalUser;
+        userCount.innerHTML = "Total Users: " + obj.totalUser;
       }
     };
 
@@ -164,12 +167,12 @@ function connectToStranger() {
         appendMessage("You have disconnected", "Bold", "center");
         startState();
       }
-      else if(constMsg.innerHTML==="Searching for partner...&nbsp;&nbsp;&nbsp;" && !closedBy){
+      else if (constMsg.innerHTML === "Searching for partner..." && !closedBy) {
         alert("Currently No user available Please try again later");
-        appendMessage("disconnected", "Bold", "center");
+        appendConstMessage("Disconnected.", "Bold", "center");
         startState();
       }
-      else { appendMessage("Stranger has disconnected", "Bold", "center");}
+      else { appendMessage("Stranger has disconnected", "Bold", "center"); }
       closedBy = false;
     };
   } else {
@@ -229,7 +232,7 @@ function startState() {
   typing.style.visibility = 'hidden';
   startB.style.visibility = 'visible';
   textbox.disabled = true;
-  textbox.value="";
+  textbox.value = "";
 }
 
 function connectedState() {
@@ -242,13 +245,12 @@ function connectedState() {
   textbox.disabled = true;
 }
 
-function clearBox()
-{
-	messages.innerHTML = "";
-	constMsg.innertHTML = "";
-	messages.appendChild(constMsg);
-	messages.appendChild(typing);
-	
+function clearBox() {
+  messages.innerHTML = "";
+  constMsg.innertHTML = "";
+  messages.appendChild(constMsg);
+  messages.appendChild(typing);
+
 }
 
 window.onbeforeunload = function () {
@@ -261,4 +263,4 @@ window.onbeforeunload = function () {
   }
   socket.close();
   closedBy = true;
- }
+}

@@ -88,6 +88,16 @@ function appendConstMessage(value, fontStyle, textPos) {
     sendB.disabled = false;
     textbox.disabled = false;
   }
+  if (value === "Searching for partner..." && userCount.innerHTML === "Total Users: " + 0) {
+    setTimeout(function () {
+      if (value === "Searching for partner..." && userCount.innerHTML === "Total Users: " + 1) {
+        alert("Currently No user available Please try again later");
+        closedBy = true;
+        socket.close();
+        getTotalUsers();
+      }
+    }, 5000)
+  }
   constMsg.innerHTML = value;
 }
 
@@ -160,12 +170,10 @@ function connectToStranger() {
       }
     };
 
-    ws.onclose = function (env) {
-
-      console.log(env);
+    ws.onclose = function () {
       // websocket is closed.
       if (closedBy) {
-        appendMessage("You have disconnected", "Bold", "center");
+        appendMessage("You have disconnected.", "Bold", "center");
         startState();
       }
       else if (constMsg.innerHTML === "Searching for partner..." && !closedBy) {
